@@ -1,4 +1,14 @@
+@import "./variables.scss";
+@import "bootstrap/dist/css/bootstrap.css";
+
+* {
+  /* font-family: "Roboto flex", Arial, sans-serif; */
+  font-family: "Wix Madefor Text";
+  /* font-family: system-ui; */
+}
+
 body,
 html {
   margin: 0;
+  background-color: white;
 }

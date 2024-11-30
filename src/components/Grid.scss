@@ -1,0 +1,33 @@
+@import "/src/variables.scss";
+
+.row {
+  //   display: block;
+  display: flex;
+  flex-direction: row;
+}
+
+.square {
+  width: 60px;
+  height: 60px;
+  background-color: $custom-gray;
+  border-radius: 10px;
+  margin: 8px;
+
+  transition: background-color 350ms ease-out;
+
+  &:hover {
+    background-color: $custom-green;
+  }
+}
+
+.pointA {
+  background-color: $custom-blue;
+}
+
+.pointB {
+  background-color: $custom-blue;
+}
+
+.obstacle {
+  background-color: gray;
+}

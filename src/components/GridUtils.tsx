@@ -1,4 +1,4 @@
-import { SquareCell } from "./Grid.constants";
+import { emptyCellProbability, SquareCell } from "./Grid.constants";
 
 // util functions
 
@@ -41,7 +41,7 @@ export function randomizeGridValues(dimension: number) {
   const grid: SquareCell[][] = MakeSquareMatrix(dimension);
   for (let i = 0; i < dimension; i++) {
     for (let j = 0; j < dimension; j++) {
-      grid[i][j] = getTrueValueWithProbability(0.7)
+      grid[i][j] = getTrueValueWithProbability(emptyCellProbability)
         ? SquareCell.Empty
         : SquareCell.Obstacle;
     }
@@ -57,6 +57,7 @@ export function getStylingOfSquare(
 ): string {
   let squareTypeStyling = "";
   const smallTextStyling = dimension > 10 ? "small-text" : "";
+
   if (square === SquareCell.PointA) squareTypeStyling = "pointA";
   else if (square === SquareCell.PointB) squareTypeStyling = "pointB";
   else if (square === SquareCell.Obstacle) squareTypeStyling = "obstacle";

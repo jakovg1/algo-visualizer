@@ -1,15 +1,15 @@
-@import "/src/variables.scss";
+@use "/src/variables.scss" as vars;
 
-.row {
-  //   display: block;
-  display: flex;
-  flex-direction: row;
+.grid {
+  display: grid;
+  width: 70vh;
+  height: 70vh;
 }
 
 .square {
-  width: 60px;
-  height: 60px;
-  background-color: $custom-gray;
+  width: 90%;
+  height: 90%;
+  background-color: vars.$custom-gray;
   border-radius: 10px;
   margin: 8px;
   display: flex;
@@ -18,25 +18,37 @@
   font-weight: bolder;
   color: white;
 
-  transition: background-color 350ms ease-out;
+  transition: background-color 350ms ease-in-out, transform 150ms ease-in-out,
+    border 150ms ease-in-out;
 
   &:hover {
-    background-color: $custom-green;
+    background-color: vars.$custom-green;
   }
 }
 
 .pointA {
-  background-color: $custom-blue;
+  cursor: grab;
+  background-color: vars.$custom-blue;
+  transform: translate(-8px, -8px);
+  box-shadow: 4px 4px 4px 0 rgba(37, 37, 37, 0.4);
 }
 
 .pointB {
-  background-color: $custom-green;
+  background-color: vars.$custom-green;
 }
 
 .obstacle {
+  transform: translate(-4px, -4px);
   background-color: gray;
-  //   border: 2px black solid;
-  border-width: 0 4px 4px 0;
-  border-style: none solid solid none;
   border-color: rgb(95, 95, 95);
+  box-shadow: 4px 4px 4px 0 rgba(37, 37, 37, 0.4);
+}
+
+.small-text {
+  font-size: 12px;
+}
+
+.button {
+  margin-top: 12px;
+  background-color: vars.$custom-blue;
 }

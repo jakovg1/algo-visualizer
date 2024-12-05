@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { Key, useState } from "react";
 import "./Grid.scss";
-import { Slider } from "@mantine/core";
+import { Button, Slider } from "@mantine/core";
 import {
   defaultDimension,
   maxDimension,
@@ -8,51 +8,31 @@ import {
   SquareCell,
 } from "./Grid.constants";
 
-function MakeSquareMatrix(n: number): SquareCell[][] {
-  return Array.from({ length: n }).map(() => Array(n).fill(SquareCell.Empty));
-}
-
-function GetArrayOfInts(begin: number, end: number): Array<number> {
-  const arr: Array<number> = [];
-  while (begin <= end) {
-    arr.push(begin++);
-  }
-  return arr;
-}
-
-// Util functions for Grid
-// function isCellPointA(grid: SquareCell[][], i: number, j: number): boolean {
-//   return grid[i][j] === SquareCell.PointA;
-// }
-// function isCellPointB(grid: SquareCell[][], i: number, j: number): boolean {
-//   return grid[i][j] === SquareCell.PointB;
-// }
-// function isCellObstacle(grid: SquareCell[][], i: number, j: number): boolean {
-//   return grid[i][j] === SquareCell.Obstacle;
-// }
-
-function getStylingOfSquare(square: SquareCell): string {
-  if (square === SquareCell.PointA) return "pointA";
-  if (square === SquareCell.PointB) return "pointB";
-  if (square === SquareCell.Obstacle) return "obstacle";
-  return "";
-}
-
-function getInlineHTMLOfSquare(square: SquareCell): string {
-  if (square === SquareCell.PointA) return "A";
-  if (square === SquareCell.PointB) return "B";
-  return "";
-}
-////////////////////////////////////////////////////////////////////////
+import {
+  GetArrayOfInts,
+  getInlineHTMLOfSquare,
+  getStylingOfSquare,
+  randomizeGridValues,
+} from "./GridUtils.tsx";
 
 function Grid() {
   const [dimension, changeDimension] = useState(defaultDimension);
-  const grid: SquareCell[][] = MakeSquareMatrix(dimension);
+  const [grid, setGrid] = useState(randomizeGridValues(dimension));
 
-  grid[0][0] = SquareCell.PointA;
-  grid[3][3] = SquareCell.PointB;
-  grid[1][1] = SquareCell.Obstacle;
-  grid[1][2] = SquareCell.Obstacle;
+  const handleClickOfEmptyCell = (i: number, j: number) => {
+    setGrid((prevGrid) => {
+      const newGrid = [...prevGrid];
+      //   const newGrid = prevGrid;
+      let cell = newGrid[i][j];
+      if (cell === SquareCell.Empty) {
+        cell = SquareCell.Obstacle;
+      } else if (cell === SquareCell.Obstacle) {
+        cell = SquareCell.Empty;
+      }
+      newGrid[i][j] = cell;
+      return newGrid;
+    });
+  };
 
   //Slider
   const sliderMarks = [
@@ -61,6 +41,34 @@ function Grid() {
     }),
   ];
 
+  function renderGrid(grid: SquareCell[][]) {
+    return (
+      <div
+        className="grid"
+        style={{
+          gridTemplateColumns: `repeat(${dimension}, 1fr)`,
+          gridTemplateRows: `repeat(${dimension}, 1fr)`,
+        }}
+      >
+        {grid.map((row, i) =>
+          row.map((square, j) => {
+            const key: Key = `${i}${j}${dimension}`;
+            return (
+              <div
+                key={key}
+                className={"square " + getStylingOfSquare(square, dimension)}
+                onDragOver={() => handleClickOfEmptyCell(i, j)}
+                onClick={() => handleClickOfEmptyCell(i, j)}
+              >
+                {getInlineHTMLOfSquare(square)}
+              </div>
+            );
+          })
+        )}
+      </div>
+    );
+  }
+
   return (
     <>
       <div className="w-50 center pb-4">
@@ -68,22 +76,29 @@ function Grid() {
           min={minDimension}
           max={maxDimension}
           value={dimension}
-          onChange={(value) => changeDimension(value)}
+          onChange={(dimensionValue) =>
+            changeDimension((oldDimensionValue) => {
+              if (oldDimensionValue === dimensionValue) return dimensionValue;
+              setGrid(() => {
+                const newGrid = randomizeGridValues(dimensionValue);
+                return newGrid;
+              });
+              return dimensionValue;
+            })
+          }
           color="rgba(9, 0, 0, 1)"
           radius="xs"
           marks={sliderMarks}
         />
       </div>
 
-      {grid.map((row, i) => (
-        <span key={i} className="row">
-          {row.map((square, j) => (
-            <div key={j} className={"square " + getStylingOfSquare(square)}>
-              {getInlineHTMLOfSquare(square)}
-            </div>
-          ))}
-        </span>
-      ))}
+      {renderGrid(grid)}
+      <Button
+        onClick={() => setGrid(() => randomizeGridValues(dimension))}
+        className="button"
+      >
+        Randomize
+      </Button>
     </>
   );
 }

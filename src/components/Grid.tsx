@@ -1,28 +1,20 @@
-import React, { Key, useState } from "react";
+import { Key } from "react";
 import "./Grid.scss";
-import { Button, Slider } from "@mantine/core";
-import {
-  defaultDimension,
-  maxDimension,
-  minDimension,
-  SquareCell,
-} from "./Grid.constants";
+import { Button } from "@mantine/core";
+import { SquareCell } from "./Grid.constants";
 
 import {
-  GetArrayOfInts,
   getInlineHTMLOfSquare,
   getStylingOfSquare,
   randomizeGridValues,
 } from "./GridUtils.tsx";
 
-function Grid() {
-  const [dimension, changeDimension] = useState(defaultDimension);
-  const [grid, setGrid] = useState(randomizeGridValues(dimension));
+function Grid(gridProps) {
+  const { dimension, grid, setGrid } = gridProps;
 
   const handleClickOfEmptyCell = (i: number, j: number) => {
-    setGrid((prevGrid) => {
+    setGrid((prevGrid: SquareCell[][]) => {
       const newGrid = [...prevGrid];
-      //   const newGrid = prevGrid;
       let cell = newGrid[i][j];
       if (cell === SquareCell.Empty) {
         cell = SquareCell.Obstacle;
@@ -33,13 +25,6 @@ function Grid() {
       return newGrid;
     });
   };
-
-  //Slider
-  const sliderMarks = [
-    ...GetArrayOfInts(minDimension, maxDimension).map((num) => {
-      return { value: num, label: num };
-    }),
-  ];
 
   function renderGrid(grid: SquareCell[][]) {
     return (
@@ -71,27 +56,6 @@ function Grid() {
 
   return (
     <>
-      <div className="w-50 center pb-4">
-        <Slider
-          min={minDimension}
-          max={maxDimension}
-          value={dimension}
-          onChange={(dimensionValue) =>
-            changeDimension((oldDimensionValue) => {
-              if (oldDimensionValue === dimensionValue) return dimensionValue;
-              setGrid(() => {
-                const newGrid = randomizeGridValues(dimensionValue);
-                return newGrid;
-              });
-              return dimensionValue;
-            })
-          }
-          color="rgba(9, 0, 0, 1)"
-          radius="xs"
-          marks={sliderMarks}
-        />
-      </div>
-
       {renderGrid(grid)}
       <Button
         onClick={() => setGrid(() => randomizeGridValues(dimension))}

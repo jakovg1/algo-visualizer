@@ -1,17 +1,24 @@
 import { useState } from "react";
 import "./App.scss";
 import Grid from "./components/Grid";
-import { Collapse, MultiSelect, Select, Slider, Switch } from "@mantine/core";
-import { GetArrayOfInts } from "./components/GridUtils";
+import { Collapse, Select, Slider, Switch } from "@mantine/core";
+import { GetArrayOfInts, randomizeGridValues } from "./components/GridUtils";
+import {
+  defaultDimension,
+  maxDimension,
+  minDimension,
+} from "./components/Grid.constants";
 
 function App() {
-  const [count, setCount] = useState(0);
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  const min = 4;
-  const max = 16;
+  //grid
+  const [dimension, setDimension] = useState(defaultDimension);
+  const [grid, setGrid] = useState(randomizeGridValues(dimension));
+
+  //Grid dimension slider
   const sliderMarks = [
-    ...GetArrayOfInts(min, max).map((num) => {
+    ...GetArrayOfInts(minDimension, maxDimension).map((num) => {
       return { value: num, label: num };
     }),
   ];
@@ -34,7 +41,7 @@ function App() {
           )}
         </div>
 
-        <Collapse in={sidebarOpen} transitionDuration={100}>
+        <Collapse in={sidebarOpen} transitionDuration={400}>
           <div className="sidebar-content ">
             <h2 className="mb-4">Settings</h2>
             <div className="mb-4">
@@ -43,8 +50,20 @@ function App() {
                 color="gray"
                 className="w-100"
                 marks={sliderMarks}
-                min={min}
-                max={max}
+                min={minDimension}
+                max={maxDimension}
+                value={dimension}
+                onChange={(dimensionValue) =>
+                  setDimension((oldDimensionValue) => {
+                    if (oldDimensionValue === dimensionValue)
+                      return dimensionValue;
+                    setGrid(() => {
+                      const newGrid = randomizeGridValues(dimensionValue);
+                      return newGrid;
+                    });
+                    return dimensionValue;
+                  })
+                }
               ></Slider>
             </div>
 
@@ -74,7 +93,7 @@ function App() {
           <p className="h2 c-custom-green">Visualize pathfinding algorithms</p>
         </div>
         <div className="main-content">
-          <Grid />
+          <Grid grid={grid} setGrid={setGrid} dimension={dimension} />
         </div>
       </div>
     </>

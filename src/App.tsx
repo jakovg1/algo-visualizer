@@ -13,8 +13,7 @@ import { automaticClosingOfSidebarDelay } from "./App.constants";
 
 function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  //   const [sidebarFocused, setSidebarFocused] = useState(false);
-  const sidebarFocusedRef = useRef(false);
+  const [sidebarFocused, setSidebarFocused] = useState(false);
 
   const closeSidebarTimeoutRef = useRef<number | null>(null);
 
@@ -31,22 +30,24 @@ function App() {
 
   //opening and closing of sidebar
   const handleSidebarMouseOnEnter = () => {
-    sidebarFocusedRef.current = true;
-    // setSidebarFocused(true);
+    setSidebarFocused(true);
     if (closeSidebarTimeoutRef.current) {
+      // if the sidebar was refocused, do not close it
       clearTimeout(closeSidebarTimeoutRef.current);
-      //   closeSidebarTimeoutRef.current = null;
     }
     setSidebarOpen(true);
   };
   const handleSidebarMouseOnLeave = () => {
-    sidebarFocusedRef.current = false;
-    // setSidebarFocused(false);
+    setSidebarFocused(false);
+    // trigger closing of the sidebar after a delay
     closeSidebarTimeoutRef.current = setTimeout(() => {
-      //   console.log("sidebar focused?", sidebarFocused);
-      //   if (sidebarFocused === true) return;
-      if (sidebarFocusedRef.current === true) return;
-      setSidebarOpen(false);
+      setSidebarFocused((focused) => {
+        if (!focused) {
+          //complete closing of the sidebar if it was not refocused after the delay
+          setSidebarOpen(false);
+        }
+        return focused;
+      });
     }, automaticClosingOfSidebarDelay);
   };
 
@@ -58,8 +59,6 @@ function App() {
         onMouseEnter={handleSidebarMouseOnEnter}
         onMouseLeave={handleSidebarMouseOnLeave}
       >
-        {/* {sidebarFocused ? "SIDEBAR" : "MAIN"} */}
-        {sidebarFocusedRef.current ? "SIDEBAR" : "MAIN"}
         <div className="flex">
           <div className="logo">P f</div>
         </div>

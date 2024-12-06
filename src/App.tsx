@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import "./App.scss";
 import Grid from "./components/Grid";
 import { Collapse, Select, Slider, Switch } from "@mantine/core";
@@ -8,9 +8,15 @@ import {
   maxDimension,
   minDimension,
 } from "./components/Grid.constants";
+import vars from "./variables.module.scss";
+import { automaticClosingOfSidebarDelay } from "./App.constants";
 
 function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  //   const [sidebarFocused, setSidebarFocused] = useState(false);
+  const sidebarFocusedRef = useRef(false);
+
+  const closeSidebarTimeoutRef = useRef<number | null>(null);
 
   //grid
   const [dimension, setDimension] = useState(defaultDimension);
@@ -23,9 +29,37 @@ function App() {
     }),
   ];
 
+  //opening and closing of sidebar
+  const handleSidebarMouseOnEnter = () => {
+    sidebarFocusedRef.current = true;
+    // setSidebarFocused(true);
+    if (closeSidebarTimeoutRef.current) {
+      clearTimeout(closeSidebarTimeoutRef.current);
+      //   closeSidebarTimeoutRef.current = null;
+    }
+    setSidebarOpen(true);
+  };
+  const handleSidebarMouseOnLeave = () => {
+    sidebarFocusedRef.current = false;
+    // setSidebarFocused(false);
+    closeSidebarTimeoutRef.current = setTimeout(() => {
+      //   console.log("sidebar focused?", sidebarFocused);
+      //   if (sidebarFocused === true) return;
+      if (sidebarFocusedRef.current === true) return;
+      setSidebarOpen(false);
+    }, automaticClosingOfSidebarDelay);
+  };
+
   return (
     <>
-      <nav className={"sidebar " + (sidebarOpen ? "sidebar-open" : "")}>
+      <nav
+        id="sidebar"
+        className={"sidebar " + (sidebarOpen ? "sidebar-open" : "")}
+        onMouseEnter={handleSidebarMouseOnEnter}
+        onMouseLeave={handleSidebarMouseOnLeave}
+      >
+        {/* {sidebarFocused ? "SIDEBAR" : "MAIN"} */}
+        {sidebarFocusedRef.current ? "SIDEBAR" : "MAIN"}
         <div className="flex">
           <div className="logo">P f</div>
         </div>
@@ -45,10 +79,10 @@ function App() {
           <div className="sidebar-content ">
             <h2 className="mb-4">Settings</h2>
             <div className="mb-4">
-              <span>Dimension</span>
+              <span>Grid size</span>
               <Slider
-                color="gray"
-                className="w-100"
+                className="dimension-slider"
+                color={vars.customBlue}
                 marks={sliderMarks}
                 min={minDimension}
                 max={maxDimension}
@@ -69,23 +103,33 @@ function App() {
 
             <div className="mt-4">
               <span>Pathfinding algorithm</span>
-              <Select data={["BFS", "DFS", "A*"]} defaultValue={"BFS"}></Select>
+              <Select
+                className="sidebar-select"
+                allowDeselect={false}
+                data={["BFS", "DFS", "A*"]}
+                defaultValue={"BFS"}
+                color={vars.customBlue}
+              ></Select>
             </div>
             <div className="mt-4 ">
               <span>Use enhanced coloring</span>
-              <Switch></Switch>
+              <Switch color={vars.customBlue} className="switch"></Switch>
             </div>
             <div className="mt-4">
               <span>Whatever goes here</span>
             </div>
             <div className="mt-4 ">
               <span>Dark theme</span>
-              <Switch></Switch>
+              <Switch color={vars.customBlue} className="switch"></Switch>
             </div>
           </div>
         </Collapse>
       </nav>
-      <div className="root-content-container">
+      <div
+        id="main-content"
+        className="root-content-container"
+        onClick={() => setSidebarOpen(false)}
+      >
         <div className="title">
           <p className="display-1">
             <span className="p-10">Pathfinder</span>

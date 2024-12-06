@@ -50,5 +50,26 @@
 
 .button {
   margin-top: 12px;
-  background-color: vars.$custom-blue;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: bold;
+
+  color: vars.$custom-blue;
+  border: 2px vars.$custom-blue solid;
+  transition: border 150ms ease-in-out, background 150ms ease-in-out,
+    color 150ms ease-in-out;
+  background: white;
+
+  &:hover {
+    color: vars.$custom-blue;
+    border: 2px vars.$custom-green solid;
+    background: white;
+  }
+
+  &:active {
+    color: vars.$custom-blue;
+    border: 2px vars.$custom-green solid;
+    background: vars.$custom-green;
+  }
+  //   background: linear-gradient(90deg, vars.$custom-blue, vars.$custom-green);
 }

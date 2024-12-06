@@ -57,12 +57,12 @@ function Grid(gridProps) {
   return (
     <>
       {renderGrid(grid)}
-      <Button
+      <button
         onClick={() => setGrid(() => randomizeGridValues(dimension))}
         className="button"
       >
         Randomize
-      </Button>
+      </button>
     </>
   );
 }

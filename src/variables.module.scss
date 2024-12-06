@@ -1,0 +1,7 @@
+@use "./variables.scss" as vars;
+
+:export {
+  customBlue: vars.$custom-blue;
+  customGreen: vars.$custom-green;
+  customGray: vars.$custom-gray;
+}

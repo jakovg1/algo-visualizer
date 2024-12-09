@@ -5,7 +5,7 @@
   width: 70vh;
   height: 70vh;
 }
-
+//Square coloring
 .square {
   width: 90%;
   height: 90%;
@@ -18,8 +18,12 @@
   font-weight: bolder;
   color: white;
 
-  transition: background-color 350ms ease-in-out, transform 150ms ease-in-out,
-    border 150ms ease-in-out;
+  //   transition: background-color 350ms ease-in-out, transform 150ms ease-in-out,
+  //     border 150ms ease-in-out;
+
+  transition: background-color 750ms cubic-bezier(0, 1, 0, 0.99),
+    transform 750ms cubic-bezier(0, 1, 0, 0.99),
+    border 750ms cubic-bezier(0, 1, 0, 0.99);
 
   &:hover {
     background-color: vars.$custom-green;
@@ -42,6 +46,10 @@
   background-color: gray;
   border-color: rgb(95, 95, 95);
   box-shadow: 4px 4px 4px 0 rgba(37, 37, 37, 0.4);
+}
+
+.algorithm-running {
+  animation: searchAlgorithm 8s forwards;
 }
 
 .small-text {
@@ -72,4 +80,23 @@
     background: vars.$custom-green;
   }
   //   background: linear-gradient(90deg, vars.$custom-blue, vars.$custom-green);
+}
+
+@keyframes searchAlgorithm {
+  0% {
+    // background-color: vars.$custom-gray;
+    background-color: rgb(251, 255, 1);
+  }
+
+  10% {
+    background-color: red;
+  }
+  50% {
+    background-color: rgb(99, 0, 0);
+  }
+
+  100% {
+    // background-color: vars.$custom-gray;
+    background-color: rgb(31, 5, 0);
+  }
 }

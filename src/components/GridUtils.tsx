@@ -1,4 +1,5 @@
-import { emptyCellProbability, SquareCell } from "./Grid.constants";
+import { CSSProperties } from "react";
+import { emptyCellProbability, Cell, CellType } from "./Grid.constants";
 
 // util functions
 
@@ -11,8 +12,8 @@ export function getTrueValueWithProbability(probability: number): boolean {
   return probability > Math.random();
 }
 
-export function MakeSquareMatrix(n: number): SquareCell[][] {
-  return Array.from({ length: n }).map(() => Array(n).fill(SquareCell.Empty));
+export function MakeSquareMatrix(n: number): Cell[][] {
+  return Array.from({ length: n }).map(() => Array(n).fill(Cell.Empty));
 }
 
 export function GetArrayOfInts(begin: number, end: number): Array<number> {
@@ -38,35 +39,47 @@ export function randomizeGridValues(dimension: number) {
     pointBColumn = (pointBColumn + getRandBetween(1, dimension)) % dimension;
   }
 
-  const grid: SquareCell[][] = MakeSquareMatrix(dimension);
+  const grid: Cell[][] = MakeSquareMatrix(dimension);
   for (let i = 0; i < dimension; i++) {
     for (let j = 0; j < dimension; j++) {
       grid[i][j] = getTrueValueWithProbability(emptyCellProbability)
-        ? SquareCell.Empty
-        : SquareCell.Obstacle;
+        ? new Cell(CellType.EmptyUnexplored, null)
+        : new Cell(CellType.Obstacle, null);
     }
   }
-  grid[pointARow][pointAColumn] = SquareCell.PointA;
-  grid[pointBRow][pointBColumn] = SquareCell.PointB;
+  grid[pointARow][pointAColumn] = new Cell(CellType.PointA, null);
+  grid[pointBRow][pointBColumn] = new Cell(CellType.PointB, null);
   return grid;
 }
 
-export function getStylingOfSquare(
-  square: SquareCell,
-  dimension: number
-): string {
+export function getClassnameOfSquare(square: Cell, dimension: number): string {
   let squareTypeStyling = "";
   const smallTextStyling = dimension > 10 ? "small-text" : "";
 
-  if (square === SquareCell.PointA) squareTypeStyling = "pointA";
-  else if (square === SquareCell.PointB) squareTypeStyling = "pointB";
-  else if (square === SquareCell.Obstacle) squareTypeStyling = "obstacle";
+  const squareType = square.type;
+
+  if (squareType === CellType.PointA) squareTypeStyling = "pointA";
+  else if (squareType === CellType.PointB) squareTypeStyling = "pointB";
+  else if (squareType === CellType.Obstacle) squareTypeStyling = "obstacle";
   else squareTypeStyling = "";
-  return `${squareTypeStyling} ${smallTextStyling}`;
+  const algorithmRunning =
+    square.isAnimated() && squareTypeStyling === "" ? "algorithm-running" : "";
+
+  return `${squareTypeStyling} ${smallTextStyling} ${algorithmRunning}`;
 }
 
-export function getInlineHTMLOfSquare(square: SquareCell): string {
-  if (square === SquareCell.PointA) return "A";
-  if (square === SquareCell.PointB) return "B";
+export function getBackgroundColorOfSquare(
+  square: Cell
+): CSSProperties | undefined {
+  if (!square.backgroundColor) return {};
+  const { red, green, blue } = square.backgroundColor;
+
+  return { backgroundColor: `rgb(${red},${green},${blue})` };
+}
+
+export function getInlineHTMLOfSquare(square: Cell): string {
+  const squareType = square.type;
+  if (squareType === CellType.PointA) return "A";
+  if (squareType === CellType.PointB) return "B";
   return " ";
 }

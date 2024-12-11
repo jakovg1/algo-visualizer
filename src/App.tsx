@@ -106,7 +106,7 @@ function App() {
         <Collapse in={sidebarOpen} transitionDuration={400}>
           <div className="sidebar-content ">
             <h2 className="mb-4">Settings</h2>
-            <div className="mb-4">
+            <div className="mt-4 mb-4">
               <span>Grid size</span>
               <Slider
                 className="dimension-slider"
@@ -130,7 +130,7 @@ function App() {
                 }}
               ></Slider>
             </div>
-            <div className="mb-4">
+            <div className="mt-4">
               <span>Visualization Speed</span>
               <Slider
                 className="dimension-slider"
@@ -183,7 +183,9 @@ function App() {
           <p className="display-1">
             <span className="p-10">Pathfinder</span>
           </p>
-          <p className="h2 c-custom-green">Visualize pathfinding algorithms</p>
+          <p className="h2 c-custom-green m-0">
+            Visualize pathfinding algorithms
+          </p>
         </div>
         <div className="main-content">
           <Grid

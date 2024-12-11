@@ -122,7 +122,7 @@ function Grid(gridProps) {
         </button>
         <button
           onClick={() => setGrid(() => randomizeGridValues(dimension))}
-          className="button"
+          className="secondary-button"
         >
           Randomize
         </button>

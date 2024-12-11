@@ -195,7 +195,7 @@ export const BFS: PathfindingAlgorithm = (
     animationManager.addAnimation(persistVisualizedAlgorithmId);
   }
 
-  console.log("ALGORITHM COMPLETE!");
+  //   console.log("ALGORITHM COMPLETE!");
 };
 
 function paintCurrentNode(

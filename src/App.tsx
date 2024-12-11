@@ -129,16 +129,6 @@ function App() {
                 onChange={(algorithmVisualizationSpeed) =>
                   setAlgorithmVisualizationSpeed(algorithmVisualizationSpeed)
                 }
-                // onChangeEnd={(dimensionSliderValue) => {
-                //   if (dimensionSliderValue !== dimension) {
-                //     setGrid(() => {
-                //       const newGrid = randomizeGridValues(dimensionSliderValue);
-                //       return newGrid;
-                //     });
-                //     setDimension(dimensionSliderValue);
-                //     setDimensionSliderValue(dimensionSliderValue);
-                //   }
-                // }}
               ></Slider>
             </div>
 

@@ -58,7 +58,7 @@
 
 .obstacle {
   //   transform: translate(-4px, -4px);
-  background-color: gray;
+  background-color: rgb(112, 112, 112);
   border-color: rgb(95, 95, 95);
   //   box-shadow: 4px 4px 4px 0 rgba(37, 37, 37, 0.4);
   box-shadow: 4px 4px 5px 1px rgba(37, 37, 37, 0.78);
@@ -94,11 +94,11 @@
   border-radius: 8px;
   font-weight: bold;
 
-  color: vars.$custom-blue;
+  color: white;
   border: 2px vars.$custom-blue solid;
   transition: border 150ms ease-in-out, background 150ms ease-in-out,
     color 150ms ease-in-out;
-  background: white;
+  background: vars.$custom-blue;
 
   &:hover {
     color: vars.$custom-blue;

@@ -8,7 +8,7 @@ export const defaultAlgorithmVisualizationDelay = 100;
 export const minAlgorithmVisualizationDelay = 1;
 export const maxAlgorithmVisualizationDelay = 200;
 
-export const defaultPersistVisualizationDelay = 2000;
+export const defaultPersistVisualizationDelay = 5000;
 
 interface Color {
   red: number;

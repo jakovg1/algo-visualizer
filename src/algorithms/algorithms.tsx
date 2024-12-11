@@ -167,16 +167,14 @@ export const BFS: PathfindingAlgorithm = (
     const { cellLocation, parent } = finalNode;
 
     path.push(finalNode.cellLocation);
-    if (noOfPathNodes !== 0 && parent !== null) {
-      const animationTimeoutId = paintPathNode(
-        setGrid,
-        finalNode,
-        noOfExploredNodes,
-        noOfPathNodes,
-        executionSpeedFactor
-      );
-      animationManager.addAnimation(animationTimeoutId);
-    }
+    const animationTimeoutId = paintPathNode(
+      setGrid,
+      finalNode,
+      noOfExploredNodes,
+      noOfPathNodes,
+      executionSpeedFactor
+    );
+    animationManager.addAnimation(animationTimeoutId);
     noOfPathNodes++;
 
     finalNode = parent;
@@ -235,7 +233,7 @@ function paintPathNode(
         const newGrid = [...prevGrid];
         const { i, j } = pathNodeToBeAnimated.cellLocation;
         newGrid[i][j].animation = false;
-        newGrid[i][j].backgroundColor = { red: 0, green: 150, blue: 0 };
+        newGrid[i][j].backgroundColor = { red: 0, green: 216, blue: 126 };
         return newGrid;
       }),
     noOfExploredNodes * executionSpeedFactor +

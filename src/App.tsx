@@ -183,9 +183,9 @@ function App() {
           <p className="display-1">
             <span className="p-10">Pathfinder</span>
           </p>
-          <p className="h2 c-custom-green m-0">
+          <h2 className="subtitle c-custom-green">
             Visualize pathfinding algorithms
-          </p>
+          </h2>
         </div>
         <div className="main-content">
           <Grid

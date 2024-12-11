@@ -1,3 +1,4 @@
+import { Dispatch, SetStateAction } from "react";
 import { Cell, CellType } from "../components/Grid.constants";
 
 type CellLocation = {
@@ -12,7 +13,7 @@ type CellLocationNode = {
 
 type PathfindingAlgorithm = (
   grid: Cell[][],
-  setGrid: any,
+  setGrid: Dispatch<SetStateAction<Cell[][]>>,
   finishedVisualizationCallback: () => void,
   persistVisualizedAlgorithmDelay: number | null,
   executionSpeedFactor: number
@@ -164,7 +165,7 @@ export const BFS: PathfindingAlgorithm = (
   const path: CellLocation[] = [];
   let noOfPathNodes = 0;
   while (finalNode !== null) {
-    const { cellLocation, parent } = finalNode;
+    const { parent } = finalNode;
 
     path.push(finalNode.cellLocation);
     const animationTimeoutId = paintPathNode(
@@ -199,7 +200,7 @@ export const BFS: PathfindingAlgorithm = (
 };
 
 function paintCurrentNode(
-  setGrid: any,
+  setGrid: Dispatch<SetStateAction<Cell[][]>>,
   nodeToBeAnimated: CellLocationNode,
   noOfPreviouslyExploredNodes: number,
   executionSpeedFactor: number = 50
@@ -221,7 +222,7 @@ function paintCurrentNode(
 }
 
 function paintPathNode(
-  setGrid: any,
+  setGrid: Dispatch<SetStateAction<Cell[][]>>,
   pathNodeToBeAnimated: CellLocationNode,
   noOfExploredNodes: number,
   pathIndex: number,

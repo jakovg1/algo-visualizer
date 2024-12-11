@@ -1,8 +1,8 @@
-export const defaultDimension = 10;
+export const defaultDimension = 15;
 export const minDimension = 5;
 export const maxDimension = 30;
 
-export const emptyCellProbability = 0.6;
+export const emptyCellProbability = 0.7;
 
 export const defaultAlgorithmVisualizationDelay = 100;
 export const minAlgorithmVisualizationDelay = 1;
@@ -10,7 +10,7 @@ export const maxAlgorithmVisualizationDelay = 200;
 
 export const defaultPersistVisualizationDelay = 5000;
 
-export const myGithubUrl: URL = "https://github.com/jakovg1";
+export const myGithubUrl: string = "https://github.com/jakovg1";
 
 interface Color {
   red: number;

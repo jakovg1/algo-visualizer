@@ -1,4 +1,4 @@
-import { Key, useRef, useState } from "react";
+import { Dispatch, Key, SetStateAction, useState } from "react";
 import "./Grid.scss";
 import {
   Cell,
@@ -14,7 +14,14 @@ import {
 } from "./GridUtils.tsx";
 import { BFS, stopAlgorithmAnimations } from "../algorithms/algorithms.tsx";
 
-function Grid(gridProps) {
+type GridProps = {
+  dimension: number;
+  grid: Cell[][];
+  setGrid: Dispatch<SetStateAction<Cell[][]>>;
+  algorithmVisualizationSpeed: number;
+};
+
+function Grid(gridProps: GridProps) {
   const { dimension, grid, setGrid, algorithmVisualizationSpeed } = gridProps;
   const [algorithmRunning, setAlgorithmRunning] = useState(false);
 

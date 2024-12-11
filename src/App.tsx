@@ -1,14 +1,7 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import "./App.scss";
 import Grid from "./components/Grid";
-import {
-  Collapse,
-  Input,
-  Select,
-  Slider,
-  Switch,
-  Tooltip,
-} from "@mantine/core";
+import { Collapse, Slider, Tooltip } from "@mantine/core";
 import { GetArrayOfInts, randomizeGridValues } from "./components/GridUtils";
 import {
   defaultAlgorithmVisualizationDelay,
@@ -25,7 +18,7 @@ import { automaticClosingOfSidebarDelay } from "./App.constants";
 function App() {
   // Sidebar
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [sidebarFocused, setSidebarFocused] = useState(false);
+  const [, setSidebarFocused] = useState(false);
   const closeSidebarTimeoutRef = useRef<number | null>(null);
 
   //opening and closing of sidebar
@@ -193,7 +186,6 @@ function App() {
             setGrid={setGrid}
             dimension={dimension}
             algorithmVisualizationSpeed={algorithmVisualizationSpeed}
-            setAlgorithmVisualizationSpeed={setAlgorithmVisualizationSpeed}
           />
         </div>
       </div>

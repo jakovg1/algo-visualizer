@@ -23,6 +23,11 @@
   width: 300px;
 }
 
+.logo-container {
+  display: flex;
+  cursor: pointer;
+}
+
 .logo {
   background-color: vars.$custom-green;
   font-weight: bolder;

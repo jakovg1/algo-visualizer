@@ -1,7 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 import "./App.scss";
 import Grid from "./components/Grid";
-import { Collapse, Input, Select, Slider, Switch } from "@mantine/core";
+import {
+  Collapse,
+  Input,
+  Select,
+  Slider,
+  Switch,
+  Tooltip,
+} from "@mantine/core";
 import { GetArrayOfInts, randomizeGridValues } from "./components/GridUtils";
 import {
   defaultAlgorithmVisualizationDelay,
@@ -10,6 +17,7 @@ import {
   maxDimension,
   minAlgorithmVisualizationDelay,
   minDimension,
+  myGithubUrl,
 } from "./components/Grid.constants";
 import vars from "./variables.module.scss";
 import { automaticClosingOfSidebarDelay } from "./App.constants";
@@ -75,9 +83,14 @@ function App() {
         onMouseEnter={handleSidebarMouseOnEnter}
         onMouseLeave={handleSidebarMouseOnLeave}
       >
-        <div className="flex">
-          <div className="logo">P f</div>
-        </div>
+        <Tooltip label="Click to find out more">
+          <div
+            className="logo-container"
+            onClick={() => window.open(myGithubUrl, "_blank")}
+          >
+            <div className="logo">P f</div>
+          </div>
+        </Tooltip>
 
         <div
           className="arrow-icon-container"

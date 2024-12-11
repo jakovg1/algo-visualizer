@@ -10,6 +10,8 @@ export const maxAlgorithmVisualizationDelay = 200;
 
 export const defaultPersistVisualizationDelay = 5000;
 
+export const myGithubUrl: URL = "https://github.com/jakovg1";
+
 interface Color {
   red: number;
   green: number;

@@ -1,6 +1,10 @@
 import { Key, useRef, useState } from "react";
 import "./Grid.scss";
-import { Cell, CellType } from "./Grid.constants";
+import {
+  Cell,
+  CellType,
+  defaultPersistVisualizationDelay,
+} from "./Grid.constants";
 
 import {
   getBackgroundColorOfSquare,
@@ -8,12 +12,11 @@ import {
   getInlineHTMLOfSquare,
   randomizeGridValues,
 } from "./GridUtils.tsx";
-import { BFS } from "../algorithms/algorithms.tsx";
+import { BFS, stopAlgorithmAnimations } from "../algorithms/algorithms.tsx";
 
 function Grid(gridProps) {
   const { dimension, grid, setGrid } = gridProps;
-  let resetGridTimeout = useRef<number>(-1);
-  let [algorithmRunning, setAlgorithmRunning] = useState(false);
+  const [algorithmRunning, setAlgorithmRunning] = useState(false);
 
   const handleClickOfEmptyCell = (i: number, j: number) => {
     setGrid((grid: Cell[][]) => {
@@ -39,15 +42,16 @@ function Grid(gridProps) {
   };
 
   const findPath = () => {
+    stopAlgorithmAnimations();
     setAlgorithmRunning(true);
-    BFS(grid, setGrid);
-    // setAlgorithmRunning(false);
+    const persistVisualizationDelay = defaultPersistVisualizationDelay;
+    BFS(grid, setGrid, stopAlgorithmAnimation, persistVisualizationDelay);
+  };
 
-    //reset grid
-    clearTimeout(resetGridTimeout.current);
-    resetGridTimeout.current = setTimeout(() => {
-      resetGrid();
-    }, 10000);
+  const stopAlgorithmAnimation = () => {
+    stopAlgorithmAnimations();
+    setAlgorithmRunning(false);
+    resetGrid();
   };
 
   const resetGrid = () => {
@@ -96,18 +100,14 @@ function Grid(gridProps) {
 
   return (
     <>
-      <div className="w-75 d-flex flex-row-reverse">
-        {algorithmRunning && (
-          <i
-            className="fa-solid fa-xmark fa-2x x-button"
-            onClick={() =>
-              setAlgorithmRunning(() => {
-                resetGrid();
-                return false;
-              })
-            }
-          ></i>
-        )}
+      <div className="x-button-container">
+        <i
+          className={
+            "fa-solid fa-xmark fa-2x x-button " +
+            (algorithmRunning ? "appear" : "disappear")
+          }
+          onClick={() => stopAlgorithmAnimation()}
+        ></i>
       </div>
       {renderGrid(grid)}
       <span>

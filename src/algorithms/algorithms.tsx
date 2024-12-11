@@ -10,9 +10,37 @@ type CellLocationNode = {
   cellLocation: CellLocation;
 };
 
-type PathfindingAlgorithm = (grid: Cell[][], setGrid: any) => CellLocation[];
+type PathfindingAlgorithm = (
+  grid: Cell[][],
+  setGrid: any,
+  finishedVisualizationCallback: () => void,
+  persistVisualizedAlgorithmDelay: number | null
+) => void;
 
-export const BFS: PathfindingAlgorithm = (grid: Cell[][], setGrid) => {
+const animationManager = {
+  animationTimeouts: [0],
+  addAnimation(animationId: number) {
+    this.animationTimeouts.push(animationId);
+  },
+  clearAllAnimations() {
+    this.animationTimeouts.forEach((id) => clearTimeout(id));
+    // console.log("CLEARED ANIMATION? ", this.animationTimeouts);
+    this.animationTimeouts = [];
+  },
+};
+
+export const stopAlgorithmAnimations = () =>
+  animationManager.clearAllAnimations();
+
+export const BFS: PathfindingAlgorithm = (
+  grid: Cell[][],
+  setGrid,
+  finishedVisualizationCallback: () => void,
+  persistVisualizedAlgorithmDelay: number | null
+) => {
+  animationManager.animationTimeouts = [];
+  const executionSpeedFactor = 50;
+
   //find starting point:
   let [pointArow, pointAcol] = [-1, -1];
   for (let i = 0; i < grid.length; i++) {
@@ -63,7 +91,13 @@ export const BFS: PathfindingAlgorithm = (grid: Cell[][], setGrid) => {
       //     j,
       //     grid[i][j].type === CellType.EmptyExplored
       //   );
-      paintCurrentNode(setGrid, currentNode, noOfExploredNodes);
+
+      const timeoutId = paintCurrentNode(
+        setGrid,
+        currentNode,
+        noOfExploredNodes
+      );
+      animationManager.addAnimation(timeoutId);
       noOfExploredNodes++;
     }
 
@@ -119,63 +153,89 @@ export const BFS: PathfindingAlgorithm = (grid: Cell[][], setGrid) => {
 
     listIndex++;
     if (listIndex >= listOfNodesToBeExplored.length) {
+      // all nodes explored and no path found - exit loop
       break;
     }
   }
 
   const path: CellLocation[] = [];
-  let cnt = 0;
+  let noOfPathNodes = 0;
   while (finalNode !== null) {
     const { cellLocation, parent } = finalNode;
 
     path.push(finalNode.cellLocation);
-    if (cnt !== 0 && parent !== null) {
-      paintPathNode(setGrid, finalNode, noOfExploredNodes, cnt);
+    if (noOfPathNodes !== 0 && parent !== null) {
+      const animationTimeoutId = paintPathNode(
+        setGrid,
+        finalNode,
+        noOfExploredNodes,
+        noOfPathNodes,
+        executionSpeedFactor
+      );
+      animationManager.addAnimation(animationTimeoutId);
     }
-    cnt++;
+    noOfPathNodes++;
 
     finalNode = parent;
   }
-  //   console.log("no of explored nodes:", noOfExploredNodes);
-  return path.reverse() || [];
+
+  //call this if algorithm should keep the visualized algorithm
+  // on the screen for 'keepVisualizedAlgorithmDelay' ms
+  if (persistVisualizedAlgorithmDelay) {
+    const delayOfAlgorithmVisualization =
+      noOfExploredNodes * executionSpeedFactor +
+      noOfPathNodes * executionSpeedFactor;
+    const totalDelay =
+      delayOfAlgorithmVisualization + persistVisualizedAlgorithmDelay;
+    const persistVisualizedAlgorithmId = setTimeout(() => {
+      finishedVisualizationCallback();
+    }, totalDelay);
+
+    animationManager.addAnimation(persistVisualizedAlgorithmId);
+  }
 };
 
 function paintCurrentNode(
   setGrid: any,
-  node: CellLocationNode,
-  noOfExploredNodes: number
-): void {
-  setTimeout(
+  nodeToBeAnimated: CellLocationNode,
+  noOfPreviouslyExploredNodes: number,
+  executionSpeedFactor: number = 50
+): number {
+  const timeoutId = setTimeout(
     () =>
       setGrid((prevGrid: Cell[][]) => {
         const newGrid = [...prevGrid];
-        const { i, j } = node.cellLocation;
+        const { i, j } = nodeToBeAnimated.cellLocation;
         if (!newGrid[i][j].backgroundColor) {
           newGrid[i][j].animation = true;
         }
         // newGrid[i][j].backgroundColor = { red: 50, green: 50, blue: 150 };
-
         return newGrid;
       }),
-    noOfExploredNodes * 50
+    noOfPreviouslyExploredNodes * executionSpeedFactor
   );
+  return timeoutId;
 }
 
 function paintPathNode(
   setGrid: any,
-  node: CellLocationNode,
+  pathNodeToBeAnimated: CellLocationNode,
   noOfExploredNodes: number,
-  iter: number
-): void {
-  setTimeout(
+  pathIndex: number,
+  executionSpeedFactor: number = 50
+): number {
+  const timeoutId = setTimeout(
     () =>
       setGrid((prevGrid: Cell[][]) => {
         const newGrid = [...prevGrid];
-        const { i, j } = node.cellLocation;
+        const { i, j } = pathNodeToBeAnimated.cellLocation;
         newGrid[i][j].animation = false;
         newGrid[i][j].backgroundColor = { red: 0, green: 150, blue: 0 };
         return newGrid;
       }),
-    noOfExploredNodes * 50 + 100 + iter * 10
+    noOfExploredNodes * executionSpeedFactor +
+      100 +
+      pathIndex * executionSpeedFactor
   );
+  return timeoutId;
 }

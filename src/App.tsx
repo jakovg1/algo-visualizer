@@ -1,7 +1,7 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./App.scss";
 import Grid from "./components/Grid";
-import { Collapse, Select, Slider, Switch } from "@mantine/core";
+import { Collapse, Input, Select, Slider, Switch } from "@mantine/core";
 import { GetArrayOfInts, randomizeGridValues } from "./components/GridUtils";
 import {
   defaultDimension,
@@ -12,23 +12,10 @@ import vars from "./variables.module.scss";
 import { automaticClosingOfSidebarDelay } from "./App.constants";
 
 function App() {
+  // Sidebar
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sidebarFocused, setSidebarFocused] = useState(false);
-
   const closeSidebarTimeoutRef = useRef<number | null>(null);
-
-  //grid
-  const [dimension, setDimension] = useState(defaultDimension);
-  const [grid, setGrid] = useState(randomizeGridValues(dimension));
-
-  //Grid dimension slider
-  const sliderMarks = [
-    ...GetArrayOfInts(minDimension, maxDimension)
-      .filter((num) => num % 5 === 0)
-      .map((num) => {
-        return { value: num, label: num };
-      }),
-  ];
 
   //opening and closing of sidebar
   const handleSidebarMouseOnEnter = () => {
@@ -52,6 +39,28 @@ function App() {
       });
     }, automaticClosingOfSidebarDelay);
   };
+
+  //Grid
+  const [dimensionSliderValue, setDimensionSliderValue] =
+    useState(defaultDimension);
+  const [dimension, setDimension] = useState(defaultDimension);
+  const [grid, setGrid] = useState(randomizeGridValues(dimension));
+  //   useEffect(() => {
+  //     dimensionSliderValue = defaultDimension;
+  //     console.log("HEYY");
+  //     return;
+  //   }, []);
+
+  //Grid dimension slider
+  const sliderMarks = [
+    ...GetArrayOfInts(minDimension, maxDimension)
+      .filter((num) => num % 5 === 0)
+      .map((num) => {
+        return { value: num, label: num };
+      }),
+  ];
+
+  // Animation and coloring
 
   return (
     <>
@@ -87,21 +96,24 @@ function App() {
                 marks={sliderMarks}
                 min={minDimension}
                 max={maxDimension}
-                onChangeEnd={(dimensionValue) =>
-                  setDimension((oldDimensionValue) => {
-                    if (oldDimensionValue === dimensionValue)
-                      return dimensionValue;
+                value={dimensionSliderValue}
+                onChange={(dimensionSliderValue) =>
+                  setDimensionSliderValue(dimensionSliderValue)
+                }
+                onChangeEnd={(dimensionSliderValue) => {
+                  if (dimensionSliderValue !== dimension) {
                     setGrid(() => {
-                      const newGrid = randomizeGridValues(dimensionValue);
+                      const newGrid = randomizeGridValues(dimensionSliderValue);
                       return newGrid;
                     });
-                    return dimensionValue;
-                  })
-                }
+                    setDimension(dimensionSliderValue);
+                    setDimensionSliderValue(dimensionSliderValue);
+                  }
+                }}
               ></Slider>
             </div>
 
-            <div className="mt-4">
+            {/* <div className="mt-4">
               <span>Pathfinding algorithm</span>
               <Select
                 className="sidebar-select"
@@ -125,7 +137,8 @@ function App() {
             <div className="mt-4 ">
               <span>Auto reset grid</span>
               <Switch color={vars.customBlue} className="switch"></Switch>
-            </div>
+              <Input color={vars.customBlue}></Input>
+            </div> */}
           </div>
         </Collapse>
       </nav>

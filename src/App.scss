@@ -95,3 +95,13 @@
   align-items: center;
   overflow-y: none;
 }
+
+.disappear {
+  transition: opacity 200ms ease-in-out;
+  opacity: 0;
+}
+
+.appear {
+  transition: opacity 200ms ease-in-out;
+  opacity: 1;
+}

@@ -72,8 +72,20 @@
   font-size: 11px;
 }
 
+.x-button-container {
+  width: 80vh;
+  height: 20px;
+  display: flex;
+  flex-direction: row-reverse;
+}
+
 .x-button {
-  //   margin
+  color: vars.$custom-blue;
+  transition: color 200ms ease-in-out;
+
+  &:hover {
+    color: vars.$custom-green;
+  }
 }
 
 .button {

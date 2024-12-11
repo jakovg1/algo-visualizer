@@ -1,8 +1,10 @@
-export const defaultDimension = 8;
+export const defaultDimension = 10;
 export const minDimension = 5;
 export const maxDimension = 30;
 
 export const emptyCellProbability = 0.6;
+
+export const defaultPersistVisualizationDelay = 2000;
 
 interface Color {
   red: number;
@@ -52,3 +54,18 @@ export class Cell {
     this.backgroundColor = null;
   }
 }
+
+export const interpolatedColors: string[] = [
+  "#00585f",
+  "#006368",
+  "#006f70",
+  "#007a76",
+  "#00867c",
+  "#009280",
+  "#009d83",
+  "#00a984",
+  "#00b585",
+  "#00c184",
+  "#00cc81",
+  "#00d87e",
+];

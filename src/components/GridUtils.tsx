@@ -13,7 +13,9 @@ export function getTrueValueWithProbability(probability: number): boolean {
 }
 
 export function MakeSquareMatrix(n: number): Cell[][] {
-  return Array.from({ length: n }).map(() => Array(n).fill(Cell.Empty));
+  return Array.from({ length: n }).map(() =>
+    Array(n).fill(new Cell(CellType.EmptyUnexplored, null))
+  );
 }
 
 export function GetArrayOfInts(begin: number, end: number): Array<number> {

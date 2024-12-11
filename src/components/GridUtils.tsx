@@ -52,18 +52,18 @@ export function randomizeGridValues(dimension: number) {
   return grid;
 }
 
-export function getClassnameOfSquare(square: Cell, dimension: number): string {
+export function getClassnameOfSquare(cell: Cell, dimension: number): string {
   let squareTypeStyling = "";
   const smallTextStyling = dimension > 10 ? "small-text" : "";
 
-  const squareType = square.type;
+  const squareType = cell.type;
 
   if (squareType === CellType.PointA) squareTypeStyling = "pointA";
   else if (squareType === CellType.PointB) squareTypeStyling = "pointB";
   else if (squareType === CellType.Obstacle) squareTypeStyling = "obstacle";
   else squareTypeStyling = "";
   const algorithmRunning =
-    square.isAnimated() && squareTypeStyling === "" ? "algorithm-running" : "";
+    cell.isAnimated() && squareTypeStyling === "" ? "algorithm-running" : "";
 
   return `${squareTypeStyling} ${smallTextStyling} ${algorithmRunning}`;
 }
@@ -73,12 +73,13 @@ export function getBackgroundColorOfSquare(
 ): CSSProperties | undefined {
   if (!square.backgroundColor) return {};
   const { red, green, blue } = square.backgroundColor;
-
-  return { backgroundColor: `rgb(${red},${green},${blue})` };
+  const style = { backgroundColor: `rgb(${red},${green},${blue})` };
+  return style;
 }
 
-export function getInlineHTMLOfSquare(square: Cell): string {
-  const squareType = square.type;
+export function getInlineHTMLOfSquare(cell: Cell, dimension: number): string {
+  if (dimension > 12) return "";
+  const squareType = cell.type;
   if (squareType === CellType.PointA) return "A";
   if (squareType === CellType.PointB) return "B";
   return " ";

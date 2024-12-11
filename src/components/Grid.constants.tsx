@@ -1,6 +1,6 @@
-export const defaultDimension = 5;
-export const minDimension = 4;
-export const maxDimension = 16;
+export const defaultDimension = 8;
+export const minDimension = 5;
+export const maxDimension = 30;
 
 export const emptyCellProbability = 0.6;
 

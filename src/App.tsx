@@ -23,9 +23,11 @@ function App() {
 
   //Grid dimension slider
   const sliderMarks = [
-    ...GetArrayOfInts(minDimension, maxDimension).map((num) => {
-      return { value: num, label: num };
-    }),
+    ...GetArrayOfInts(minDimension, maxDimension)
+      .filter((num) => num % 5 === 0)
+      .map((num) => {
+        return { value: num, label: num };
+      }),
   ];
 
   //opening and closing of sidebar
@@ -85,8 +87,7 @@ function App() {
                 marks={sliderMarks}
                 min={minDimension}
                 max={maxDimension}
-                value={dimension}
-                onChange={(dimensionValue) =>
+                onChangeEnd={(dimensionValue) =>
                   setDimension((oldDimensionValue) => {
                     if (oldDimensionValue === dimensionValue)
                       return dimensionValue;
@@ -119,6 +120,10 @@ function App() {
             </div>
             <div className="mt-4 ">
               <span>Dark theme</span>
+              <Switch color={vars.customBlue} className="switch"></Switch>
+            </div>
+            <div className="mt-4 ">
+              <span>Auto reset grid</span>
               <Switch color={vars.customBlue} className="switch"></Switch>
             </div>
           </div>

@@ -4,8 +4,11 @@ import Grid from "./components/Grid";
 import { Collapse, Input, Select, Slider, Switch } from "@mantine/core";
 import { GetArrayOfInts, randomizeGridValues } from "./components/GridUtils";
 import {
+  defaultAlgorithmVisualizationDelay,
   defaultDimension,
+  maxAlgorithmVisualizationDelay,
   maxDimension,
+  minAlgorithmVisualizationDelay,
   minDimension,
 } from "./components/Grid.constants";
 import vars from "./variables.module.scss";
@@ -45,11 +48,6 @@ function App() {
     useState(defaultDimension);
   const [dimension, setDimension] = useState(defaultDimension);
   const [grid, setGrid] = useState(randomizeGridValues(dimension));
-  //   useEffect(() => {
-  //     dimensionSliderValue = defaultDimension;
-  //     console.log("HEYY");
-  //     return;
-  //   }, []);
 
   //Grid dimension slider
   const sliderMarks = [
@@ -60,7 +58,14 @@ function App() {
       }),
   ];
 
-  // Animation and coloring
+  // Animation
+  const [algorithmVisualizationSpeed, setAlgorithmVisualizationSpeed] =
+    useState(defaultAlgorithmVisualizationDelay);
+  const visualizationSpeedMarks = [
+    { value: minAlgorithmVisualizationDelay, label: "Fast" },
+    { value: defaultAlgorithmVisualizationDelay, label: "Medium" },
+    { value: maxAlgorithmVisualizationDelay, label: "Slow" },
+  ];
 
   return (
     <>
@@ -112,6 +117,30 @@ function App() {
                 }}
               ></Slider>
             </div>
+            <div className="mb-4">
+              <span>Visualization Speed</span>
+              <Slider
+                className="dimension-slider"
+                color={vars.customBlue}
+                marks={visualizationSpeedMarks}
+                min={minAlgorithmVisualizationDelay}
+                max={maxAlgorithmVisualizationDelay}
+                value={algorithmVisualizationSpeed}
+                onChange={(algorithmVisualizationSpeed) =>
+                  setAlgorithmVisualizationSpeed(algorithmVisualizationSpeed)
+                }
+                // onChangeEnd={(dimensionSliderValue) => {
+                //   if (dimensionSliderValue !== dimension) {
+                //     setGrid(() => {
+                //       const newGrid = randomizeGridValues(dimensionSliderValue);
+                //       return newGrid;
+                //     });
+                //     setDimension(dimensionSliderValue);
+                //     setDimensionSliderValue(dimensionSliderValue);
+                //   }
+                // }}
+              ></Slider>
+            </div>
 
             {/* <div className="mt-4">
               <span>Pathfinding algorithm</span>
@@ -154,7 +183,13 @@ function App() {
           <p className="h2 c-custom-green">Visualize pathfinding algorithms</p>
         </div>
         <div className="main-content">
-          <Grid grid={grid} setGrid={setGrid} dimension={dimension} />
+          <Grid
+            grid={grid}
+            setGrid={setGrid}
+            dimension={dimension}
+            algorithmVisualizationSpeed={algorithmVisualizationSpeed}
+            setAlgorithmVisualizationSpeed={setAlgorithmVisualizationSpeed}
+          />
         </div>
       </div>
     </>

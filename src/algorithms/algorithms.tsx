@@ -14,7 +14,8 @@ type PathfindingAlgorithm = (
   grid: Cell[][],
   setGrid: any,
   finishedVisualizationCallback: () => void,
-  persistVisualizedAlgorithmDelay: number | null
+  persistVisualizedAlgorithmDelay: number | null,
+  executionSpeedFactor: number
 ) => void;
 
 const animationManager = {
@@ -36,10 +37,10 @@ export const BFS: PathfindingAlgorithm = (
   grid: Cell[][],
   setGrid,
   finishedVisualizationCallback: () => void,
-  persistVisualizedAlgorithmDelay: number | null
+  persistVisualizedAlgorithmDelay: number | null,
+  executionSpeedFactor
 ) => {
   animationManager.animationTimeouts = [];
-  const executionSpeedFactor = 50;
 
   //find starting point:
   let [pointArow, pointAcol] = [-1, -1];
@@ -71,6 +72,7 @@ export const BFS: PathfindingAlgorithm = (
     // run BFS iteration
 
     currentNode = listOfNodesToBeExplored[listIndex];
+    listOfNodesToBeExplored[listIndex] = {} as CellLocationNode; // to reduce memory
 
     const { i, j } = currentNode.cellLocation;
     if (grid[i][j].type === CellType.EmptyExplored) {
@@ -95,7 +97,8 @@ export const BFS: PathfindingAlgorithm = (
       const timeoutId = paintCurrentNode(
         setGrid,
         currentNode,
-        noOfExploredNodes
+        noOfExploredNodes,
+        executionSpeedFactor
       );
       animationManager.addAnimation(timeoutId);
       noOfExploredNodes++;
@@ -193,6 +196,8 @@ export const BFS: PathfindingAlgorithm = (
 
     animationManager.addAnimation(persistVisualizedAlgorithmId);
   }
+
+  console.log("ALGORITHM COMPLETE!");
 };
 
 function paintCurrentNode(

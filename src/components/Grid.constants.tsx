@@ -4,6 +4,10 @@ export const maxDimension = 30;
 
 export const emptyCellProbability = 0.6;
 
+export const defaultAlgorithmVisualizationDelay = 100;
+export const minAlgorithmVisualizationDelay = 1;
+export const maxAlgorithmVisualizationDelay = 200;
+
 export const defaultPersistVisualizationDelay = 2000;
 
 interface Color {

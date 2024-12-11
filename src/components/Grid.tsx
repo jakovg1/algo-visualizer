@@ -15,7 +15,7 @@ import {
 import { BFS, stopAlgorithmAnimations } from "../algorithms/algorithms.tsx";
 
 function Grid(gridProps) {
-  const { dimension, grid, setGrid } = gridProps;
+  const { dimension, grid, setGrid, algorithmVisualizationSpeed } = gridProps;
   const [algorithmRunning, setAlgorithmRunning] = useState(false);
 
   const handleClickOfEmptyCell = (i: number, j: number) => {
@@ -42,10 +42,16 @@ function Grid(gridProps) {
   };
 
   const findPath = () => {
-    stopAlgorithmAnimations();
+    // stopAlgorithmAnimations();
     setAlgorithmRunning(true);
     const persistVisualizationDelay = defaultPersistVisualizationDelay;
-    BFS(grid, setGrid, stopAlgorithmAnimation, persistVisualizationDelay);
+    BFS(
+      grid,
+      setGrid,
+      stopAlgorithmAnimation,
+      persistVisualizationDelay,
+      algorithmVisualizationSpeed
+    );
   };
 
   const stopAlgorithmAnimation = () => {

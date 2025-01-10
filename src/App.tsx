@@ -14,6 +14,7 @@ import {
 } from "./components/Grid.constants";
 import vars from "./variables.module.scss";
 import { automaticClosingOfSidebarDelay } from "./App.constants";
+import { stopAlgorithmAnimations } from "./algorithms/algorithms";
 
 function App() {
   // Sidebar
@@ -112,14 +113,14 @@ function App() {
                   setDimensionSliderValue(dimensionSliderValue)
                 }
                 onChangeEnd={(dimensionSliderValue) => {
-                  if (dimensionSliderValue !== dimension) {
-                    setGrid(() => {
-                      const newGrid = randomizeGridValues(dimensionSliderValue);
-                      return newGrid;
-                    });
-                    setDimension(dimensionSliderValue);
-                    setDimensionSliderValue(dimensionSliderValue);
-                  }
+                  if (dimensionSliderValue === dimension) return;
+                  setGrid(() => {
+                    stopAlgorithmAnimations();
+                    const newGrid = randomizeGridValues(dimensionSliderValue);
+                    return newGrid;
+                  });
+                  setDimension(dimensionSliderValue);
+                  setDimensionSliderValue(dimensionSliderValue);
                 }}
               ></Slider>
             </div>

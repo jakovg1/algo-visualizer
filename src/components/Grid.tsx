@@ -1,46 +1,45 @@
 import { Dispatch, Key, SetStateAction, useState } from "react";
 import "./Grid.scss";
 import {
-  Cell,
   CellType,
   defaultPersistVisualizationDelay,
+  GridModel,
 } from "./Grid.constants";
 
 import {
   getBackgroundColorOfSquare,
   getClassnameOfSquare,
   getInlineHTMLOfSquare,
-  randomizeGridValues,
 } from "./GridUtils.tsx";
 import { BFS, stopAlgorithmAnimations } from "../algorithms/algorithms.tsx";
 
 type GridProps = {
-  dimension: number;
-  grid: Cell[][];
-  setGrid: Dispatch<SetStateAction<Cell[][]>>;
+  gridModel: GridModel;
+  setGridModel: Dispatch<SetStateAction<GridModel>>;
   algorithmVisualizationSpeed: number;
 };
 
 function Grid(gridProps: GridProps) {
-  const { dimension, grid, setGrid, algorithmVisualizationSpeed } = gridProps;
+  const { gridModel, setGridModel, algorithmVisualizationSpeed } = gridProps;
   const [algorithmRunning, setAlgorithmRunning] = useState(false);
 
   const handleClickOfEmptyCell = (i: number, j: number) => {
-    setGrid((grid: Cell[][]) => {
-      const newGrid = [...grid];
+    setGridModel((oldGrid: GridModel) => {
+      const newGrid = oldGrid.copyGrid();
+      console.log(newGrid);
       //   newGrid[i][j].animation = false;
       //   newGrid[i][j].backgroundColor = { red: 0, green: 0, blue: 255 };
-      switch (newGrid[i][j].type) {
+      switch (newGrid.getCell(i, j).type) {
         case CellType.EmptyExplored: {
-          newGrid[i][j].type = CellType.Obstacle;
+          newGrid.getCell(i, j).type = CellType.Obstacle;
           break;
         }
         case CellType.EmptyUnexplored: {
-          newGrid[i][j].type = CellType.Obstacle;
+          newGrid.getCell(i, j).type = CellType.Obstacle;
           break;
         }
         case CellType.Obstacle: {
-          newGrid[i][j].type = CellType.EmptyUnexplored;
+          newGrid.getCell(i, j).type = CellType.EmptyUnexplored;
           break;
         }
       }
@@ -48,34 +47,41 @@ function Grid(gridProps: GridProps) {
     });
   };
 
-  const findPath = () => {
-    // stopAlgorithmAnimations();
+  const handleFindPathClicked = () => {
+    stopAlgorithmAnimations();
+    resetGrid();
     setAlgorithmRunning(true);
     const persistVisualizationDelay = defaultPersistVisualizationDelay;
     BFS(
-      grid,
-      setGrid,
-      stopAlgorithmAnimation,
+      gridModel,
+      setGridModel,
+      handleXButtonClicked,
       persistVisualizationDelay,
       algorithmVisualizationSpeed
     );
   };
 
-  const stopAlgorithmAnimation = () => {
+  const handleXButtonClicked = () => {
     stopAlgorithmAnimations();
     setAlgorithmRunning(false);
     resetGrid();
   };
 
+  const handleRandomizeClicked = () => {
+    stopAlgorithmAnimations();
+    setGridModel(() => new GridModel(gridModel.dimension));
+  };
+
   const resetGrid = () => {
-    setGrid((grid: Cell[][]) => {
-      const newGrid = [...grid];
+    setGridModel((grid: GridModel) => {
+      const newGrid = grid.copyGrid();
+      const dimension = grid.dimension;
       for (let i = 0; i < dimension; i++) {
         for (let j = 0; j < dimension; j++) {
-          grid[i][j].animation = false;
-          grid[i][j].backgroundColor = null;
-          if (grid[i][j].type === CellType.EmptyExplored) {
-            grid[i][j].type = CellType.EmptyUnexplored;
+          newGrid.getCell(i, j).animation = false;
+          newGrid.getCell(i, j).backgroundColor = null;
+          if (newGrid.getCell(i, j).type === CellType.EmptyExplored) {
+            newGrid.getCell(i, j).type = CellType.EmptyUnexplored;
           }
         }
       }
@@ -83,7 +89,8 @@ function Grid(gridProps: GridProps) {
     });
   };
 
-  function renderGrid(grid: Cell[][]) {
+  function renderGrid(grid: GridModel) {
+    const { dimension, id } = grid;
     return (
       <div
         className="grid"
@@ -92,9 +99,9 @@ function Grid(gridProps: GridProps) {
           gridTemplateRows: `repeat(${dimension}, 1fr)`,
         }}
       >
-        {grid.map((row, i) =>
+        {grid.cells.map((row, i) =>
           row.map((cell, j) => {
-            const key: Key = `${i}${j}${dimension}`;
+            const key: Key = `${i}${j}${id}`;
             return (
               <div
                 key={key}
@@ -119,16 +126,16 @@ function Grid(gridProps: GridProps) {
             "fa-solid fa-xmark fa-2x x-button " +
             (algorithmRunning ? "appear" : "disappear")
           }
-          onClick={() => stopAlgorithmAnimation()}
+          onClick={() => handleXButtonClicked()}
         ></i>
       </div>
-      {renderGrid(grid)}
+      {renderGrid(gridModel)}
       <span>
-        <button className="button m-2" onClick={() => findPath()}>
+        <button className="button m-2" onClick={() => handleFindPathClicked()}>
           Find path
         </button>
         <button
-          onClick={() => setGrid(() => randomizeGridValues(dimension))}
+          onClick={() => handleRandomizeClicked()}
           className="secondary-button"
         >
           Randomize

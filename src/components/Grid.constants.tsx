@@ -1,3 +1,6 @@
+import { v4 as uuid } from "uuid";
+import { randomizeGridValues } from "./GridUtils";
+
 export const defaultDimension = 15;
 export const minDimension = 5;
 export const maxDimension = 30;
@@ -58,6 +61,37 @@ export class Cell {
 
   resetBackgorundColor(): void {
     this.backgroundColor = null;
+  }
+}
+
+export class GridModel {
+  dimension: number;
+  cells: Cell[][];
+  id: string;
+
+  constructor(dimension: number) {
+    this.dimension = dimension;
+    this.cells = randomizeGridValues(dimension);
+    this.id = uuid();
+  }
+
+  getCell(row: number, col: number): Cell {
+    return this.cells[row][col];
+  }
+
+  setCell(row: number, col: number, cell: Cell): void {
+    this.cells[row][col] = cell;
+  }
+
+  copyGrid(): GridModel {
+    const newGridModel: GridModel = {
+      ...this,
+      getCell: this.getCell,
+      setCell: this.setCell,
+      copyGrid: this.copyGrid,
+    };
+    newGridModel.cells = this.cells;
+    return newGridModel;
   }
 }
 

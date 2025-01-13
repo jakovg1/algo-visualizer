@@ -2,10 +2,11 @@ import { useRef, useState } from "react";
 import "./App.scss";
 import Grid from "./components/Grid";
 import { Collapse, Slider, Tooltip } from "@mantine/core";
-import { GetArrayOfInts, randomizeGridValues } from "./components/GridUtils";
+import { GetArrayOfInts } from "./components/GridUtils";
 import {
   defaultAlgorithmVisualizationDelay,
   defaultDimension,
+  GridModel,
   maxAlgorithmVisualizationDelay,
   maxDimension,
   minAlgorithmVisualizationDelay,
@@ -49,7 +50,7 @@ function App() {
   const [dimensionSliderValue, setDimensionSliderValue] =
     useState(defaultDimension);
   const [dimension, setDimension] = useState(defaultDimension);
-  const [grid, setGrid] = useState(randomizeGridValues(dimension));
+  const [gridModel, setGridModel] = useState(new GridModel(dimension));
 
   //Grid dimension slider
   const sliderMarks = [
@@ -114,10 +115,10 @@ function App() {
                 }
                 onChangeEnd={(dimensionSliderValue) => {
                   if (dimensionSliderValue === dimension) return;
-                  setGrid(() => {
+                  setGridModel(() => {
                     stopAlgorithmAnimations();
-                    const newGrid = randomizeGridValues(dimensionSliderValue);
-                    return newGrid;
+                    const newGridModel = new GridModel(dimensionSliderValue);
+                    return newGridModel;
                   });
                   setDimension(dimensionSliderValue);
                   setDimensionSliderValue(dimensionSliderValue);
@@ -183,9 +184,8 @@ function App() {
         </div>
         <div className="main-content">
           <Grid
-            grid={grid}
-            setGrid={setGrid}
-            dimension={dimension}
+            gridModel={gridModel}
+            setGridModel={setGridModel}
             algorithmVisualizationSpeed={algorithmVisualizationSpeed}
           />
         </div>

@@ -5,6 +5,7 @@ import {
   defaultPersistVisualizationDelay,
   GridModel,
 } from "./Grid.constants";
+import { useDraggable, useDroppable, DndContext } from "@dnd-kit/core";
 
 import {
   getBackgroundColorOfSquare,
@@ -12,6 +13,7 @@ import {
   getInlineHTMLOfSquare,
 } from "./GridUtils.tsx";
 import { BFS, stopAlgorithmAnimations } from "../algorithms/algorithms.tsx";
+import GridDragNdrop from "./GridDragNdrop.tsx";
 
 type GridProps = {
   gridModel: GridModel;
@@ -89,32 +91,47 @@ function Grid(gridProps: GridProps) {
     });
   };
 
+  //drag n drop start and end squares
+  const { isOver, setNodeRef: setNodeRefDroppable } = useDroppable({
+    id: "droppable",
+  });
+  const {
+    attributes,
+    listeners,
+    setNodeRef: setNodeRefDraggable,
+    transform,
+  } = useDraggable({
+    id: "draggable",
+  });
+
   function renderGrid(grid: GridModel) {
     const { dimension, id } = grid;
     return (
-      <div
-        className="grid"
-        style={{
-          gridTemplateColumns: `repeat(${dimension}, 1fr)`,
-          gridTemplateRows: `repeat(${dimension}, 1fr)`,
-        }}
-      >
-        {grid.cells.map((row, i) =>
-          row.map((cell, j) => {
-            const key: Key = `${i}${j}${id}`;
-            return (
-              <div
-                key={key}
-                className={"square " + getClassnameOfSquare(cell, dimension)}
-                style={getBackgroundColorOfSquare(cell)}
-                onClick={() => handleClickOfEmptyCell(i, j)}
-              >
-                {getInlineHTMLOfSquare(cell, dimension)}
-              </div>
-            );
-          })
-        )}
-      </div>
+      <DndContext>
+        <div
+          className="grid"
+          style={{
+            gridTemplateColumns: `repeat(${dimension}, 1fr)`,
+            gridTemplateRows: `repeat(${dimension}, 1fr)`,
+          }}
+        >
+          {grid.cells.map((row, i) =>
+            row.map((cell, j) => {
+              const key: Key = `${i}${j}${id}`;
+              return (
+                <div
+                  key={key}
+                  className={"square " + getClassnameOfSquare(cell, dimension)}
+                  style={getBackgroundColorOfSquare(cell)}
+                  onClick={() => handleClickOfEmptyCell(i, j)}
+                >
+                  {getInlineHTMLOfSquare(cell, dimension)}
+                </div>
+              );
+            })
+          )}
+        </div>
+      </DndContext>
     );
   }
 
@@ -129,7 +146,8 @@ function Grid(gridProps: GridProps) {
           onClick={() => handleXButtonClicked()}
         ></i>
       </div>
-      {renderGrid(gridModel)}
+      {/* {renderGrid(gridModel)} */}
+      <GridDragNdrop></GridDragNdrop>
       <span>
         <button className="button m-2" onClick={() => handleFindPathClicked()}>
           Find path

@@ -3,7 +3,9 @@ import { useDraggable } from "@dnd-kit/core";
 import "./Grid.scss";
 
 function GridDraggableItem({ id, label }: { id: string; label: string }) {
-  const { attributes, listeners, setNodeRef, transform } = useDraggable({ id });
+  const { attributes, listeners, setNodeRef, transform } = useDraggable({
+    id,
+  });
 
   const style = {
     transform: transform

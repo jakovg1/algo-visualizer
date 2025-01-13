@@ -23,9 +23,8 @@
   //   transition: background-color 350ms ease-in-out, transform 150ms ease-in-out,
   //     border 150ms ease-in-out;
 
-  transition: background-color 750ms cubic-bezier(0, 1, 0, 0.99),
-    transform 750ms cubic-bezier(0, 1, 0, 0.99),
-    box-shadow 750ms cubic-bezier(0, 1, 0, 0.99);
+  transition: background-color 150ms ease-in-out, transform 150ms ease-in-out,
+    box-shadow 150ms ease-in-out;
 
   &:hover {
     background-color: vars.$custom-green;

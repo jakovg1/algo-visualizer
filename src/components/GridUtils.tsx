@@ -26,20 +26,15 @@ export function GetArrayOfInts(begin: number, end: number): Array<number> {
   return arr;
 }
 
-export function randomizeGridValues(dimension: number) {
-  let [pointARow, pointAColumn, pointBRow, pointBColumn]: number[] = [
-    getRandBetween(0, dimension),
-    getRandBetween(0, dimension),
+export function randomizeGridValues(dimension: number): Cell[][] {
+  const [pointARow, pointAColumn]: number[] = [
     getRandBetween(0, dimension),
     getRandBetween(0, dimension),
   ];
   //choose point B to have a different row and column from point A
-  if (pointARow === pointBRow) {
-    pointBRow = (pointBRow + getRandBetween(1, dimension)) % dimension;
-  }
-  if (pointAColumn === pointBColumn) {
-    pointBColumn = (pointBColumn + getRandBetween(1, dimension)) % dimension;
-  }
+  const pointBRow = (pointARow + getRandBetween(1, dimension)) % dimension;
+  const pointBColumn =
+    (pointAColumn + getRandBetween(1, dimension)) % dimension;
 
   const grid: Cell[][] = MakeSquareMatrix(dimension);
   for (let i = 0; i < dimension; i++) {
@@ -84,5 +79,5 @@ export function getInlineHTMLOfSquare(cell: Cell, dimension: number): string {
   const squareType = cell.type;
   if (squareType === CellType.PointA) return "A";
   if (squareType === CellType.PointB) return "B";
-  return " ";
+  return "";
 }

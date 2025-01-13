@@ -7,7 +7,8 @@ import GridDroppableItem from "./GridDroppableItem";
 import GridDraggableItem from "./GridDraggableItem";
 
 function GridDragNdrop() {
-  const [gridModel, setGridModel] = useState(new GridModel(5));
+  const dimension = 6;
+  const [gridModel, setGridModel] = useState(new GridModel(dimension));
 
   function renderGrid(gridModel: GridModel) {
     return gridModel.cells.map((row, i) =>
@@ -80,8 +81,8 @@ function GridDragNdrop() {
       <div
         className="grid"
         style={{
-          gridTemplateColumns: `repeat(${5}, 1fr)`,
-          gridTemplateRows: `repeat(${5}, 1fr)`,
+          gridTemplateColumns: `repeat(${dimension}, 1fr)`,
+          gridTemplateRows: `repeat(${dimension}, 1fr)`,
         }}
       >
         {renderGrid(gridModel)}
